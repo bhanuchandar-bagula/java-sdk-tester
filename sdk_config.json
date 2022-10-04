@@ -1,0 +1,77 @@
+{
+  "storage_sdk": {
+    "api_module": "com.nutanix.sto.java.client.api.StorageContainerApi",
+    "payload_module": "com.nutanix.dp1.sto.storage.v4.config.StorageContainer",
+    "response_module": "com.nutanix.dp1.sto.storage.v4.config.StorageContainerResponse",
+    "list_response_module": "com.nutanix.dp1.sto.storage.v4.config.StorageContainersResponse",
+    "task_response_module": "com.nutanix.dp1.sto.storage.v4.config.StorageContainerTaskResponse",
+    "get": {
+      "method": "getStorageContainerByExtId",
+      "args": {
+        "container_id": "5860bc99-1331-4f69-b524-6feb15b393ec",
+        "hash_map": []
+      },
+      "arg_type": ["str","hashmap_array"]
+    },
+    "list": {
+      "method": "getAllStorageContainers",
+      "args": {"page": 0,
+      "limit": 0,
+      "filter": null,
+      "order_by": null,
+      "select": null,
+      "hash_map": []
+        },
+      "arg_type": ["int","int","str","str","str","hashmap_array"]
+    },
+    "delete": {
+      "method": "deleteStorageContainerByExtId",
+      "args": {
+        "container_id": "d50a84c7-64fe-42be-afaa-581ada5b2a40",
+        "ignore_small_file": true,
+        "has_map_array": []
+      },
+      "arg_type": ["str","bool","hashmap_array"]
+    },
+    "create": {
+      "method": "addStorageContainerForCluster",
+      "payload":{
+        "setName": "test_17",
+        "setAdvertisedCapacity": 2,
+        "setCompressionEnabled": false,
+        "setReplicationFactor": 1
+      },
+      "args": {
+        "body": "payload",
+        "x_cluster_id": "0005e902-fd3d-9287-0000-000000019de0"
+      },
+      "arg_type": ["payload","str","hashmap_array"]
+    },
+    "update": {
+      "method": "updateStorageContainer",
+      "args_type_value_map": {
+        "name": "",
+        "has_map_array": []
+      }
+    }
+  },
+  "vmm_sdk": {
+    "api_module": "com.nutanix.vmmroot.java.client.api.VmApi",
+    "payload_module": "com.nutanix.dp1.vmmroot.vmm.v4.ahv.config.Vm",
+    "response_module": "com.nutanix.dp1.vmmroot.vmm.v4.ahv.config.CreateVmResponse",
+    "create": {
+      "method": "addStorageContainerForCluster",
+      "payload":{
+        "setName": "test_17",
+        "setAdvertisedCapacity": 2,
+        "setCompressionEnabled": false,
+        "setReplicationFactor": 1
+      },
+      "args": {
+        "body": "payload",
+        "x_cluster_id": "0005e902-fd3d-9287-0000-000000019de0"
+      },
+      "arg_type": ["payload","str","hashmap_array"]
+    }
+  }
+}
