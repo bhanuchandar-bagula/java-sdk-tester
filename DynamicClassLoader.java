@@ -1,6 +1,6 @@
 package org.example;
 
-import com.nutanix.sto.java.client.ApiClient;
+import com.nutanix.vmm.java.client.ApiClient;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
@@ -8,6 +8,7 @@ import java.io.*;
 import java.lang.reflect.Method;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
+
 
 public class DynamicClassLoader {
     public static void main(String[] args) throws Exception {
@@ -18,6 +19,21 @@ public class DynamicClassLoader {
         client.setUsername("admin"); // UserName to connect to the cluster
         client.setPassword("Nutanix.123"); // Password to connect to the cluster}
         client.setVerifySsl(false);
+
+//        Class<?> clientClass = Class.forName("com.nutanix.sto.java.client.ApiClient");
+//        Object client = clientClass.newInstance();
+//        Method setHost = clientClass.getDeclaredMethod("setHost", String.class);
+//        setHost.invoke(client, "10.46.153.34");
+//        Method setPort = clientClass.getDeclaredMethod("setPort", Integer.class);
+//        Integer port = (Integer) 9440;
+//        setPort.invoke(client, port);
+//        Method setUser = clientClass.getDeclaredMethod("setUsername", String.class);
+//        setUser.invoke(client, "admin");
+//        Method setPassword = clientClass.getDeclaredMethod("setPassword", String.class);
+//        setPassword.invoke(client, "Nutanix.123");
+//        Method setVerifySsl = clientClass.getDeclaredMethod("setVerifySsl", Boolean.class);
+//        setVerifySsl.invoke(client, false);
+
         String filePath = "C:\\Users\\bhanuchandar.bagula\\storage-sdk-2\\src\\main\\java\\org\\example\\sdk_config.json";
         HashMap[] arg1 = new HashMap[1];
 
@@ -46,9 +62,9 @@ public class DynamicClassLoader {
             JSONArray getArgsType = (JSONArray) getConfig.get("arg_type");
             JSONObject getArgs = (JSONObject) getConfig.get("args");
             Class[] params = getArgTypeArray(getArgsType);
-            String container_id = (String) getArgs.get("container_id");
+            String ext_id = (String) getArgs.get("ext_id");
             Method getStorageContainerByExtId = apiClass.getDeclaredMethod(getMethod, params);
-            Object extIdResponse = resClass.cast(getStorageContainerByExtId.invoke(apiObj, container_id, arg1));
+            Object extIdResponse = resClass.cast(getStorageContainerByExtId.invoke(apiObj, ext_id, arg1));
             Method getData = resClass.getDeclaredMethod("getData");
             Object getDataResponse = getData.invoke(extIdResponse);
             System.out.println(" : " + getDataResponse);
@@ -75,6 +91,7 @@ public class DynamicClassLoader {
             JSONObject createConfig = (JSONObject) storageJson.get("create");
             String createMethod = (String) createConfig.get("method");
             JSONObject createPayload = (JSONObject) createConfig.get("payload");
+            JSONObject createPayloadArgType = (JSONObject) createConfig.get("payload_arg_type");
             JSONArray createArgsType = (JSONArray) createConfig.get("arg_type");
             Class[] createParams = getArgTypeArray(createArgsType);
             JSONObject createArgs = (JSONObject) createConfig.get("args");
@@ -83,8 +100,16 @@ public class DynamicClassLoader {
             createParams[0] = payloadClass;
             for (Object o : createPayload.keySet()) {
                 String key = (String) o;
+                if (createPayloadArgType.get(key).equals("int")){
+                    Integer arg = ((Number) createPayload.get(key)).intValue();
+                    System.out.println(" : " + arg);
+                    Method set = payloadClass.getDeclaredMethod(key, Integer.class);
+                    set.invoke(payloadObj, arg);
+                }
+                else{
                 Method set = payloadClass.getDeclaredMethod(key, createPayload.get(key).getClass());
                 set.invoke(payloadObj, createPayload.get(key));
+                }
             }
             String xClusterId = (String) createArgs.get("x_cluster_id");
             Method addStorageContainerForCluster = apiClass.getDeclaredMethod(createMethod, createParams);
