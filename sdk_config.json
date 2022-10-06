@@ -8,7 +8,7 @@
     "get": {
       "method": "getStorageContainerByExtId",
       "args": {
-        "container_id": "5860bc99-1331-4f69-b524-6feb15b393ec",
+        "ext_id": "5860bc99-1331-4f69-b524-6feb15b393ec",
         "hash_map": []
       },
       "arg_type": ["str","hashmap_array"]
@@ -41,6 +41,12 @@
         "setCompressionEnabled": false,
         "setReplicationFactor": 1
       },
+      "payload_arg_type": {
+        "setName": "str",
+        "setAdvertisedCapacity": "long",
+        "setCompressionEnabled": "bool",
+        "setReplicationFactor": "int"
+      },
       "args": {
         "body": "payload",
         "x_cluster_id": "0005e902-fd3d-9287-0000-000000019de0"
@@ -55,23 +61,44 @@
       }
     }
   },
-  "vmm_sdk": {
-    "api_module": "com.nutanix.vmmroot.java.client.api.VmApi",
-    "payload_module": "com.nutanix.dp1.vmmroot.vmm.v4.ahv.config.Vm",
-    "response_module": "com.nutanix.dp1.vmmroot.vmm.v4.ahv.config.CreateVmResponse",
+  "image_sdk": {
+    "api_module": "com.nutanix.vmm.java.client.api.ImagesApi",
+    "payload_module": "com.nutanix.dp1.vmm.vmm.v4.images.Image",
+    "task_response_module": "com.nutanix.dp1.vmm.vmm.v4.images.ImagesTaskApiResponse",
+    "list_response_module": "com.nutanix.dp1.vmm.vmm.v4.images.ImageListApiResponse",
     "create": {
-      "method": "addStorageContainerForCluster",
-      "payload":{
-        "setName": "test_17",
-        "setAdvertisedCapacity": 2,
-        "setCompressionEnabled": false,
-        "setReplicationFactor": 1
+      "method": "createImage",
+      "payload": {
+        "setName": "test_17"
+      },
+      "payload_arg_type": {
+        "setName": "str"
       },
       "args": {
-        "body": "payload",
-        "x_cluster_id": "0005e902-fd3d-9287-0000-000000019de0"
+        "body": "payload"
       },
-      "arg_type": ["payload","str","hashmap_array"]
+      "arg_type": ["payload", "hashmap_array"]
+    },
+    "get": {
+      "method": "getImageByExtId",
+      "args": {
+        "ext_id": "5860bc99-1331-4f69-b524-6feb15b393ec",
+        "hash_map": []
+      },
+      "arg_type": ["str","hashmap_array"]
+    },
+    "list": {
+      "method": "getImagesList",
+      "args": {"page": 0,
+        "limit": 0,
+        "filter": null,
+        "order_by": null,
+        "hash_map": []
+      },
+      "arg_type": ["int","int","str","str","hashmap_array"]
+    },
+    "update": {
+
     }
   }
 }
