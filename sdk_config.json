@@ -1,14 +1,16 @@
 {
   "storage_sdk": {
+    "api_client_module": "com.nutanix.sto.java.client.ApiClient",
     "api_module": "com.nutanix.sto.java.client.api.StorageContainerApi",
     "payload_module": "com.nutanix.dp1.sto.storage.v4.config.StorageContainer",
     "response_module": "com.nutanix.dp1.sto.storage.v4.config.StorageContainerResponse",
     "list_response_module": "com.nutanix.dp1.sto.storage.v4.config.StorageContainersResponse",
-    "task_response_module": "com.nutanix.dp1.sto.storage.v4.config.StorageContainerTaskResponse",
+    "create_response_module": "com.nutanix.dp1.sto.storage.v4.config.StorageContainerTaskResponse",
+    "delete_response_module": "com.nutanix.dp1.sto.storage.v4.config.StorageContainerTaskResponse",
     "get": {
       "method": "getStorageContainerByExtId",
       "args": {
-        "ext_id": "5860bc99-1331-4f69-b524-6feb15b393ec",
+        "ext_id": "9ef2bc83-12b8-40ea-b94d-4bf07ecc729b",
         "hash_map": []
       },
       "arg_type": ["str","hashmap_array"]
@@ -27,7 +29,7 @@
     "delete": {
       "method": "deleteStorageContainerByExtId",
       "args": {
-        "container_id": "d50a84c7-64fe-42be-afaa-581ada5b2a40",
+        "container_id": "736b92a6-b44d-437e-a7bc-7f07155a56ee",
         "ignore_small_file": true,
         "has_map_array": []
       },
@@ -36,7 +38,7 @@
     "create": {
       "method": "addStorageContainerForCluster",
       "payload":{
-        "setName": "test_17",
+        "setName": "test_14",
         "setAdvertisedCapacity": 2,
         "setCompressionEnabled": false,
         "setReplicationFactor": 1
@@ -49,22 +51,31 @@
       },
       "args": {
         "body": "payload",
-        "x_cluster_id": "0005e902-fd3d-9287-0000-000000019de0"
+        "x_cluster_id": "0005eb62-9907-ae35-0000-00000001c84b"
       },
       "arg_type": ["payload","str","hashmap_array"]
     },
     "update": {
       "method": "updateStorageContainer",
-      "args_type_value_map": {
-        "name": "",
-        "has_map_array": []
-      }
+      "payload":{
+        "setAdvertisedCapacity": 2
+      },
+      "payload_arg_type": {
+        "setAdvertisedCapacity": "long"
+      },
+      "args": {
+        "body": "payload",
+        "ext_id": "dabd9cc6-d9b4-4dd9-b380-e3177f14bcf6"
+      },
+      "arg_type": ["payload","str","hashmap_array"]
     }
   },
   "image_sdk": {
+    "api_client_module": "com.nutanix.vmm.java.client.ApiClient",
     "api_module": "com.nutanix.vmm.java.client.api.ImagesApi",
     "payload_module": "com.nutanix.dp1.vmm.vmm.v4.images.Image",
     "task_response_module": "com.nutanix.dp1.vmm.vmm.v4.images.ImagesTaskApiResponse",
+    "response_module": "com.nutanix.dp1.vmm.vmm.v4.images.ImageApiResponse",
     "list_response_module": "com.nutanix.dp1.vmm.vmm.v4.images.ImageListApiResponse",
     "create": {
       "method": "createImage",
@@ -99,6 +110,99 @@
     },
     "update": {
 
+    }
+  },
+  "vmm_sdk": {
+    "api_client_module": "com.nutanix.vmmroot.java.client.ApiClient",
+    "api_module": "com.nutanix.vmmroot.java.client.api.VmApi",
+    "payload_module": "com.nutanix.dp1.vmmroot.vmm.v4.ahv.config.Vm",
+    "response_module": "com.nutanix.dp1.vmmroot.vmm.v4.ahv.config.GetVmResponse",
+    "list_response_module": "com.nutanix.dp1.vmmroot.vmm.v4.ahv.config.ListVmsResponse",
+    "delete_response_module": "com.nutanix.dp1.vmmroot.vmm.v4.ahv.config.DeleteVmResponse",
+    "create_response_module": "com.nutanix.dp1.vmmroot.vmm.v4.ahv.config.CreateVmResponse",
+    "update_response_module": "com.nutanix.dp1.vmmroot.vmm.v4.ahv.config.UpdateVmResponse",
+    "list": {
+      "method": "listVms",
+      "args": {"page": 0,
+        "limit": 0,
+        "filter": null,
+        "order_by": null,
+        "hash_map": []
+      },
+      "arg_type": ["int","int","str","str","hashmap_array"]
+    },
+    "get": {
+      "method": "getVmByExtId",
+      "args": {
+        "ext_id": "c23a5867-cd9e-4e7c-bba8-e47569417aad",
+        "hash_map": []
+      },
+      "arg_type": ["str","hashmap_array"]
+    },
+    "delete": {
+      "method": "deleteVm",
+      "args": {
+        "container_id": "c23a5867-cd9e-4e7c-bba8-e47569417aad",
+        "has_map_array": []
+      },
+      "arg_type": ["str","hashmap_array"]
+    },
+    "create": {
+      "method": "createVm",
+      "payload":{
+        "setName": "test_vm_4",
+        "setMemorySizeBytes": 67108864,
+        "setNumCoresPerSocket": 1,
+        "setNumThreadsPerCore": 1,
+        "setCluster": "0005ed95-7d7c-51ff-0000-00000001c84b"
+      },
+      "payload_arg_type": {
+        "setName": "str",
+        "setMemorySizeBytes": "long",
+        "setNumCoresPerSocket": "int",
+        "setNumThreadsPerCore": "int",
+        "setCluster": "cluster_reference"
+      },
+      "args": {
+        "body": "payload"
+      },
+      "arg_type": ["payload","hashmap_array"]
+    },
+    "update": {
+      "method": "updateVm",
+      "payload":{
+        "setName": "test_vm_4",
+        "setMemorySizeBytes": 67108864,
+        "setNumCoresPerSocket": 1,
+        "setNumThreadsPerCore": 1,
+        "setNumSockets": 1,
+        "setDescription": "updated description4",
+        "setNumVnumaNodes": 0,
+        "setVcpuHardPinningEnabled": false,
+        "setCpuPassthroughEnabled": false,
+        "setIsAgentVm": false,
+        "setMemoryOvercommitEnabled": false,
+        "setGpuConsoleEnabled": false
+      },
+      "payload_arg_type": {
+        "setName": "str",
+        "setMemorySizeBytes": "long",
+        "setNumCoresPerSocket": "int",
+        "setNumThreadsPerCore": "int",
+        "setNumSockets": "int",
+        "setDescription": "str",
+        "setNumVnumaNodes": "int",
+        "setVcpuHardPinningEnabled": "bool",
+        "setCpuPassthroughEnabled": "bool",
+        "setIsAgentVm": "bool",
+        "setMemoryOvercommitEnabled": "bool",
+        "setGpuConsoleEnabled": "bool"
+      },
+      "args": {
+        "body": "payload",
+        "ext_id": "c23a5867-cd9e-4e7c-bba8-e47569417aad"
+      },
+      "arg_type": ["payload","str","hashmap_array"]
     }
   }
 }
