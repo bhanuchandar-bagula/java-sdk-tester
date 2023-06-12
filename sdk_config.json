@@ -7,10 +7,11 @@
     "list_response_module": "com.nutanix.dp1.sto.storage.v4.config.StorageContainersResponse",
     "create_response_module": "com.nutanix.dp1.sto.storage.v4.config.StorageContainerTaskResponse",
     "delete_response_module": "com.nutanix.dp1.sto.storage.v4.config.StorageContainerTaskResponse",
+    "update_response_module": "com.nutanix.dp1.sto.storage.v4.config.StorageContainerTaskResponse",
     "get": {
       "method": "getStorageContainerByExtId",
       "args": {
-        "ext_id": "9ef2bc83-12b8-40ea-b94d-4bf07ecc729b",
+        "ext_id": "a88739f8-cfd5-4e54-bd48-3dd3afdfc94c",
         "hash_map": []
       },
       "arg_type": ["str","hashmap_array"]
@@ -18,18 +19,18 @@
     "list": {
       "method": "getAllStorageContainers",
       "args": {"page": 0,
-      "limit": 0,
-      "filter": null,
-      "order_by": null,
-      "select": null,
-      "hash_map": []
-        },
+        "limit": 50,
+        "filter": null,
+        "order_by": null,
+        "select": null,
+        "hash_map": []
+      },
       "arg_type": ["int","int","str","str","str","hashmap_array"]
     },
     "delete": {
       "method": "deleteStorageContainerByExtId",
       "args": {
-        "container_id": "736b92a6-b44d-437e-a7bc-7f07155a56ee",
+        "container_id": "a88739f8-cfd5-4e54-bd48-3dd3afdfc94c",
         "ignore_small_file": true,
         "has_map_array": []
       },
@@ -38,36 +39,36 @@
     "create": {
       "method": "addStorageContainerForCluster",
       "payload":{
-        "setName": "test_14",
-        "setAdvertisedCapacity": 2,
-        "setCompressionEnabled": false,
+        "setName": "test_15",
+        "setAdvertisedCapacityBytes": 2,
+        "setIsCompressionEnabled": false,
         "setReplicationFactor": 1
       },
       "payload_arg_type": {
         "setName": "str",
-        "setAdvertisedCapacity": "long",
-        "setCompressionEnabled": "bool",
+        "setAdvertisedCapacityBytes": "long",
+        "setIsCompressionEnabled": "bool",
         "setReplicationFactor": "int"
       },
       "args": {
         "body": "payload",
-        "x_cluster_id": "0005eb62-9907-ae35-0000-00000001c84b"
+        "x_cluster_id": "0005fcd0-7a99-c281-343d-ac1f6b6e51ad"
       },
       "arg_type": ["payload","str","hashmap_array"]
     },
     "update": {
       "method": "updateStorageContainer",
       "payload":{
-        "setAdvertisedCapacity": 2
+        "setAdvertisedCapacityBytes": 3
       },
       "payload_arg_type": {
-        "setAdvertisedCapacity": "long"
+        "setAdvertisedCapacityBytes": "long"
       },
       "args": {
-        "body": "payload",
-        "ext_id": "dabd9cc6-d9b4-4dd9-b380-e3177f14bcf6"
+        "ext_id": "a88739f8-cfd5-4e54-bd48-3dd3afdfc94c",
+        "body": "payload"
       },
-      "arg_type": ["payload","str","hashmap_array"]
+      "arg_type": ["str","payload","hashmap_array"]
     }
   },
   "image_sdk": {
