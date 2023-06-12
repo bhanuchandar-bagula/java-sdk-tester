@@ -1,13 +1,17 @@
 package org.example;
 
-import com.nutanix.dp1.vmmroot.vmm.v4.ahv.config.ClusterReference;
-import javafx.event.EventTarget;
+import com.nutanix.dp1.vmm.vmm.v4.ahv.config.ClusterReference;
+//import javafx.event.EventTarget;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
-import java.io.*;
-import java.lang.reflect.Method;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -15,7 +19,7 @@ import java.util.LinkedHashMap;
 public class DynamicClassLoader {
     public static void main(String[] args) throws Exception {
 
-        String filePath = "C:\\Users\\bhanuchandar.bagula\\storage-sdk-2\\src\\main\\java\\org\\example\\sdk_config.json";
+        String filePath = "/Users/bhanuchandar.bagula/IdeaProjects/sdk-testing/src/test/java/org/example/sdk_config.json";
         HashMap[] arg1 = new HashMap[1];
 //        HashMap<String, Object> arg1 = new HashMap<>();
 //        arg1.put("extid", "uhnom");
@@ -26,14 +30,15 @@ public class DynamicClassLoader {
             JSONObject jsonObject =  (JSONObject) obj;
 
             // API client object creation
-            JSONObject storageJson = (JSONObject) jsonObject.get("vmm_sdk");
+            JSONObject storageJson = (JSONObject) jsonObject.get("storage_sdk");
             String apiClientModule = (String) storageJson.get("api_client_module");
+            System.out.println("api client module : " + apiClientModule);
             Class<?> clientClass = Class.forName(apiClientModule);
             Object client = clientClass.newInstance();
             System.out.println("API client instance crated");
             Method setHost = clientClass.getDeclaredMethod("setHost", String.class);
             System.out.println("Setting host");
-            setHost.invoke(client, "10.45.4.125");
+            setHost.invoke(client, "10.36.240.245");
             Method setPort = clientClass.getDeclaredMethod("setPort", int.class);
             int port = 9440;
             System.out.println("Setting port");
@@ -75,10 +80,10 @@ public class DynamicClassLoader {
             Integer limit = ((Number) listArgs.get("limit")).intValue();
             String filter = (String) listArgs.get("filter");
             String order_by = (String) listArgs.get("order_by");
-//            String select = (String) listArgs.get("select");
+            String select = (String) listArgs.get("select");
             Method getAllStorageContainers = apiClass.getDeclaredMethod(listMethod, listParams);
             Object list_response = lisResClass.cast(getAllStorageContainers.invoke
-                    (apiObj,page,limit,filter,order_by,arg1));
+                    (apiObj,page,limit,filter,select,order_by,arg1));
             Method listData = lisResClass.getDeclaredMethod("getData");
             Object listDataResponse = listData.invoke(list_response);
             System.out.println("List Response : " + listDataResponse);
@@ -133,10 +138,10 @@ public class DynamicClassLoader {
                 set.invoke(payloadObj, createPayload.get(key));
                 }
             }
-//            String xClusterId = (String) createArgs.get("x_cluster_id");
+            String xClusterId = (String) createArgs.get("x_cluster_id");
             Method addStorageContainerForCluster = apiClass.getDeclaredMethod(createMethod, createParams);
             System.out.println("Firing Create API");
-            Object add_response = createResClass.cast(addStorageContainerForCluster.invoke(apiObj, payloadObj, arg1));
+            Object add_response = createResClass.cast(addStorageContainerForCluster.invoke(apiObj, payloadObj, xClusterId, arg1));
             Method addData = createResClass.getDeclaredMethod("getData");
             Object addDataResponse = addData.invoke(add_response);
             System.out.println("Create Response : " + addDataResponse);
@@ -151,7 +156,8 @@ public class DynamicClassLoader {
             JSONObject updateArgs = (JSONObject) updateConfig.get("args");
             Class<?> payloadClassUpdate = Class.forName(payloadModule);
             Object payloadObjUpdate = payloadClassUpdate.newInstance();
-            updateParams[0] = payloadClassUpdate;
+            updateParams[0] = String.class;
+            updateParams[1] = payloadClassUpdate;
             for (Object o : updatePayload.keySet()) {
                 String key = (String) o;
                 if (updatePayloadArgType.get(key).equals("int")){
@@ -169,7 +175,7 @@ public class DynamicClassLoader {
             System.out.println("Firing Update API");
             arg1[0] = new HashMap<String, Object>();
             arg1[0].put("If-Match", Etag);
-            Object update_response = updateResClass.cast(updateStorageContainerForCluster.invoke(apiObj, payloadObjUpdate, containerIdUpdate, arg1));
+            Object update_response = updateResClass.cast(updateStorageContainerForCluster.invoke(apiObj, containerIdUpdate, payloadObjUpdate, arg1));
             Method updateData = updateResClass.getDeclaredMethod("getData");
             Object updateDataResponse = updateData.invoke(update_response);
             System.out.println("Update Response : " + updateDataResponse);
@@ -181,13 +187,13 @@ public class DynamicClassLoader {
             JSONObject delArgs = (JSONObject) delConfig.get("args");
             Class[] delParams = getArgTypeArray(delArgsType);
             String delContainerId = (String) delArgs.get("container_id");
-//            Boolean ignoreSmallFiles = (Boolean) delArgs.get("ignore_small_file");
+            Boolean ignoreSmallFiles = (Boolean) delArgs.get("ignore_small_file");
             Method deleteStorageContainerByExtId = apiClass.getDeclaredMethod(delMethod, delParams);
             System.out.println("Firing Delete API");
             arg1[0] = new HashMap<String, Object>();
             arg1[0].put("If-Match", Etag);
             Object del_response = delResClass.cast(deleteStorageContainerByExtId.invoke(apiObj,
-                    delContainerId, arg1));
+                    delContainerId, ignoreSmallFiles, arg1));
             Method delData = delResClass.getDeclaredMethod("getData");
             Object delDataResponse = delData.invoke(del_response);
             System.out.println("Delete Response : " + delDataResponse);
@@ -216,7 +222,7 @@ public class DynamicClassLoader {
                 params[i] = Boolean.class;
             }
             else{
-                params[i] = java.util.HashMap[].class;
+                params[i] = HashMap[].class;
             }
         }
         return params;
